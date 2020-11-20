@@ -8,12 +8,15 @@
         "character-animations": "github:riknoll/character-animations#v0.3.0",
         "block-menu": "github:riknoll/arcade-custom-menu#v0.0.1",
         "arcade-tilemap-a-star": "github:jwunderl/arcade-tilemap-a-star#v0.3.2",
-        "arcade-minimap": "github:microsoft/arcade-minimap#v0.6.1"
+        "arcade-minimap": "github:microsoft/arcade-minimap#v0.6.1",
+        "tilemaps": "github:microsoft/pxt-tilemaps#v1.10.0"
     },
     "files": [
         "main.blocks",
         "main.ts",
-        "README.md"
+        "README.md",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "test.ts"
