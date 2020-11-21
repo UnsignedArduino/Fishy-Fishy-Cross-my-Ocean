@@ -116,13 +116,17 @@ scene.onOverlapTile(SpriteKind.NPC, myTiles.tile12, function (sprite, location) 
         info.startCountdown(15)
     }
 })
+function fade_out () {
+    color.startFade(color.Black, color.originalPalette, 2000)
+    color.pauseUntilFadeDone()
+}
 info.onCountdownEnd(function () {
     if (!(in_game)) {
         for (let index = 0; index <= 9; index++) {
             tiles.setWallAt(tiles.getTileLocation(3, index + 1), false)
         }
         for (let sprite of sprites.allOfKind(SpriteKind.NPC)) {
-            scene.followPath(sprite, paths[sprites.readDataNumber(sprite, "path_index")], randint(40, 60))
+            scene.followPath(sprite, paths[sprites.readDataNumber(sprite, "path_index")], randint(40, 80))
         }
         in_game = true
     } else {
@@ -130,6 +134,10 @@ info.onCountdownEnd(function () {
         game.over(player_made_it)
     }
 })
+function fade_in () {
+    color.startFade(color.originalPalette, color.Black, 2000)
+    color.pauseUntilFadeDone()
+}
 scene.onOverlapTile(SpriteKind.Player, myTiles.tile12, function (sprite, location) {
     player_made_it = true
     sprite.setKind(SpriteKind.SurvivedPlayer)
@@ -142,10 +150,9 @@ sprites.onOverlap(SpriteKind.NPC, SpriteKind.Enemy, function (sprite, otherSprit
     sprite.destroy(effects.spray, 100)
 })
 function start_game () {
-    info.startCountdown(10)
+    info.startCountdown(5)
 }
 function initilize_map () {
-    loading = 0
     scene.setBackgroundColor(9)
     tiles.setTilemap(tiles.createTilemap(hex`40000c000202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020213131314141415151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515161616141414151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151616161414141515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151516161614141415151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515161616141414151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151616161414141515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151516161614141415151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515161616141414150f151515151515151515151515151515151515151515151515151515151515150f15151515151515151515151515151515151515151515150f1616161414140c1015151515151515150c151515151515151515151515151515150c15151515151015151515151515151515151515150c1515151515151515101616161414140d1103151515151515150d0809151515151515030405151515150b0e151515150312091515150b1515150706151515150d150a1515151503151116161601010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101`, img`
         2222222222222222222222222222222222222222222222222222222222222222
@@ -188,16 +195,18 @@ function initilize_map () {
         `, [myTiles.transparency16,sprites.builtin.oceanSand6,sprites.dungeon.hazardWater,sprites.builtin.coral0,sprites.builtin.coral4,sprites.builtin.coral5,sprites.builtin.coral2,sprites.builtin.coral1,myTiles.tile1,myTiles.tile2,myTiles.tile3,myTiles.tile4,myTiles.tile5,myTiles.tile6,myTiles.tile7,myTiles.tile8,myTiles.tile9,myTiles.tile10,myTiles.tile11,myTiles.tile14,myTiles.tile13,myTiles.tile15,myTiles.tile12], TileScale.Sixteen))
     sprite_player_fish = summon_fish(false, false)
     sprite_player_fish.setKind(SpriteKind.Player)
-    controller.moveSprite(sprite_player_fish, 50, 50)
+    controller.moveSprite(sprite_player_fish, 64, 64)
     scene.cameraFollowSprite(sprite_player_fish)
     for (let location of tiles.getTilesByType(myTiles.tile13)) {
         tiles.setTileAt(location, myTiles.tile15)
     }
-    loading = -1
 }
 function update_minimap () {
     map = minimap.minimap(MinimapScale.Eighth, 2, 11)
     for (let sprite of sprites.allOfKind(SpriteKind.NPC)) {
+        minimap.includeSprite(map, sprite, MinimapSpriteScale.MinimapScale)
+    }
+    for (let sprite of sprites.allOfKind(SpriteKind.SurvivedNPC)) {
         minimap.includeSprite(map, sprite, MinimapSpriteScale.MinimapScale)
     }
     for (let sprite of sprites.allOfKind(SpriteKind.Enemy)) {
@@ -453,6 +462,7 @@ tiles.setTilemap(tiles.createTilemap(hex`0a0008000000000000000000000000000000000
 while (!(controller.anyButton.isPressed())) {
     pause(100)
 }
+fade_in()
 scene.setBackgroundImage(img`
     ................................................................................................................................................................
     ................................................................................................................................................................
@@ -575,9 +585,14 @@ scene.setBackgroundImage(img`
     ................................................................................................................................................................
     ................................................................................................................................................................
     `)
+loading = 0
+fade_out()
 initilize_map()
+fade_in()
+loading = -1
 create_minimap()
 start_game()
+fade_out()
 forever(function () {
     sprite_map.setImage(update_minimap())
 })
@@ -606,7 +621,7 @@ forever(function () {
                 }
             }
             if (closest_sprite.kind() == SpriteKind.NPC || closest_sprite.kind() == SpriteKind.Player) {
-                shark.follow(closest_sprite, 50)
+                shark.follow(closest_sprite, 48)
             } else {
                 shark.follow(closest_sprite, 0)
             }

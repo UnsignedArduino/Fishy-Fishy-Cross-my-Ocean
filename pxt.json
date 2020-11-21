@@ -11,7 +11,8 @@
         "arcade-tilemap-a-star": "github:jwunderl/arcade-tilemap-a-star#v0.3.2",
         "arcade-minimap": "github:microsoft/arcade-minimap#v0.6.1",
         "tilemaps": "github:microsoft/pxt-tilemaps#v1.10.0",
-        "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.0.9"
+        "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.0.9",
+        "Color Fading": "github:jwunderl/pxt-color#v0.2.0"
     },
     "files": [
         "main.blocks",
