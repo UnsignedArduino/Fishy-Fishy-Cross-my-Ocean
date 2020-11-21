@@ -332,10 +332,9 @@ forever(function () {
     pause(100)
 })
 forever(function () {
-    if (in_game && true) {
+    if (in_game) {
         for (let shark of sprites.allOfKind(SpriteKind.Enemy)) {
             shortest_distance = 9999999999
-            closest_sprite = shark
             for (let sprite of sprites.allOfKind(SpriteKind.NPC)) {
                 if (spriteutils.distanceBetween(shark, sprite) < shortest_distance) {
                     shortest_distance = spriteutils.distanceBetween(shark, sprite)
