@@ -291,6 +291,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
         game.over(false)
     })
 })
+let closest_sprite: Sprite = null
+let shortest_distance = 0
 let sprite_map: Sprite = null
 let sprite_shark: Sprite = null
 let map: minimap.Minimap = null
@@ -309,7 +311,7 @@ let user_shark_count = 0
 let user_fish_count = 0
 // max is 21
 user_fish_count = 21
-user_shark_count = 1
+user_shark_count = 2
 in_game = false
 player_made_it = false
 last_15 = false
@@ -328,4 +330,28 @@ forever(function () {
         info.startCountdown(0)
     }
     pause(100)
+})
+forever(function () {
+    if (in_game) {
+        for (let shark of sprites.allOfKind(SpriteKind.Enemy)) {
+            shortest_distance = 9999999999
+            for (let sprite of sprites.allOfKind(SpriteKind.NPC)) {
+                if (spriteutils.distanceBetween(shark, sprite) < shortest_distance) {
+                    shortest_distance = spriteutils.distanceBetween(shark, sprite)
+                    closest_sprite = sprite
+                }
+            }
+            for (let sprite of sprites.allOfKind(SpriteKind.Player)) {
+                if (spriteutils.distanceBetween(shark, sprite) < shortest_distance) {
+                    shortest_distance = spriteutils.distanceBetween(shark, sprite)
+                    closest_sprite = sprite
+                }
+            }
+            if (closest_sprite.kind() == SpriteKind.NPC || closest_sprite.kind() == SpriteKind.Player) {
+                shark.follow(closest_sprite, 50)
+            } else {
+                shark.follow(closest_sprite, 0)
+            }
+        }
+    }
 })
