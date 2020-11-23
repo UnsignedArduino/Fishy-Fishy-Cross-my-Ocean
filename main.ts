@@ -119,7 +119,10 @@ scene.onOverlapTile(SpriteKind.NPC, myTiles.tile12, function (sprite, location) 
     sprite.setKind(SpriteKind.SurvivedNPC)
     if (!(last_15)) {
         last_15 = true
-        info.startCountdown(15)
+        info.stopCountdown()
+        timer.after(100, function () {
+            info.startCountdown(15)
+        })
     }
 })
 function fade_out () {
@@ -142,6 +145,9 @@ info.onCountdownEnd(function () {
             scene.followPath(sprite, paths[sprites.readDataNumber(sprite, "path_index")], randint(40, 80))
         }
         in_game = true
+        timer.after(100, function () {
+            info.startCountdown(60)
+        })
     } else {
         in_game = false
         game.over(player_made_it)
@@ -156,7 +162,16 @@ scene.onOverlapTile(SpriteKind.Player, myTiles.tile12, function (sprite, locatio
     sprite.setKind(SpriteKind.SurvivedPlayer)
     if (!(last_15)) {
         last_15 = true
-        info.startCountdown(15)
+        info.stopCountdown()
+        timer.after(100, function () {
+            info.startCountdown(15)
+        })
+        timer.background(function () {
+            for (let index = 0; index < 50; index++) {
+                info.changeScoreBy(2)
+                pause(10)
+            }
+        })
     }
 })
 sprites.onOverlap(SpriteKind.NPC, SpriteKind.Enemy, function (sprite, otherSprite) {
@@ -284,6 +299,7 @@ function initilize_map () {
     for (let location of tiles.getTilesByType(myTiles.tile13)) {
         tiles.setTileAt(location, myTiles.tile15)
     }
+    info.setScore(600)
 }
 function update_minimap () {
     map = minimap.minimap(MinimapScale.Eighth, 2, 11)
@@ -541,11 +557,11 @@ scene.setBackgroundImage(img`
     ...........................................................................................................ffcbbbbbff1cccc1f...f44144fc4144f44f.................
     ..........................................................................................................fcccbcbcbb1c1c1cff...fff144f4c144444f.................
     ......666666666...666666666...666666666...666666666...6666.....666...666..........................ccccc..fcccbcbcbbb1333ccf......fd44f4414444f..................
-    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...8.8..........cbbddcfccccbcbcbbb1c333c........fd44cc4144f...................
-    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8.8...........ccbddcccccbbbbbbb1c333c........fc444444df....................
+    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...888..........cbbddcfccccbcbcbbb1c333c........fd44cc4144f...................
+    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8.............ccbddcccccbbbbbbb1c333c........fc444444df....................
     ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888...888............ccbbccccccbbbbb11c333c.......cbdc4444ff.....................
     ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.......8............fccbfccccccbbbb11c133cc......cdddffff.......................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8...8............fccfcbbcccccbbbc11c31cc.......ccc...........................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8.888............fccfcbbcccccbbbc11c31cc.......ccc...........................
     ......6888..6888..6888........688866666...6888666888..6888888666888..6888..........................fcbbf.cdddddfbbbc111111c.....................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888..........................fbbf...cdddfbbdbf1111cc......................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888.........................fbbf.....ccfbbdbfffccc........................................
@@ -858,5 +874,10 @@ forever(function () {
             }
             pause(50)
         }
+    }
+})
+game.onUpdateInterval(100, function () {
+    if (in_game) {
+        info.changeScoreBy(-1)
     }
 })
