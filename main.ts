@@ -222,6 +222,7 @@ sprites.onOverlap(SpriteKind.NPC, SpriteKind.Enemy, function (sprite, otherSprit
             ..........fff........fffff..........
             `)
     }
+    pause(5)
     timer.after(100, function () {
         character.setCharacterAnimationsEnabled(otherSprite, true)
     })
@@ -445,6 +446,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
             ..........fff........fffff......
             `)
     }
+    pause(5)
     timer.after(100, function () {
         character.setCharacterAnimationsEnabled(otherSprite, true)
     })
