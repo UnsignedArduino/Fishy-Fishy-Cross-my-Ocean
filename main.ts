@@ -107,6 +107,7 @@ spriteutils.createRenderable(200, function (screen2) {
         screen2.fill(15)
         screen2.drawRect(scene.screenWidth() / 2 - 25, scene.screenHeight() / 2 - 3, 50, 6, 1)
         screen2.fillRect(scene.screenWidth() / 2 - 23, scene.screenHeight() / 2 - 1, Math.map(loading * 100, 0, 100, 0, 46), 2, 1)
+        images.printCenter(screen2, message, scene.screenHeight() * 0.55, 1)
     }
 })
 scene.onOverlapTile(SpriteKind.NPC, myTiles.tile12, function (sprite, location) {
@@ -237,9 +238,10 @@ function initilize_map () {
         loading += 1 / (user_fish_count - 1 + user_shark_count)
         pause(100)
     }
-    for (let index = 0; index < user_fish_count - 1; index++) {
+    for (let index = 0; index <= user_fish_count - 2; index++) {
         summon_fish(true, true)
         loading += 1 / (user_fish_count - 1 + user_shark_count)
+        message = "Calculating paths...(" + (index + 1) + "/" + (user_fish_count - 1) + ")"
         pause(100)
     }
     pause(100)
@@ -440,6 +442,7 @@ let sprite_fish: Sprite = null
 let local_choice = 0
 let right_fish_animations: Image[][] = []
 let left_fish_animations: Image[][] = []
+let message = ""
 let loading = 0
 let paths: tiles.Location[][] = []
 let last_15 = false
@@ -455,6 +458,7 @@ player_made_it = false
 last_15 = false
 paths = []
 loading = -1
+message = ""
 scene.setBackgroundColor(9)
 scene.setBackgroundImage(img`
     ................................................................................................................................................................
@@ -716,7 +720,9 @@ scene.setBackgroundImage(img`
     `)
 loading = 0
 fade_out()
+let loading_start_time = game.runtime()
 initilize_map()
+message = "Took " + (game.runtime() - loading_start_time) / 1000 + " seconds"
 fade_in()
 loading = -1
 create_minimap()
