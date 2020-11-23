@@ -13,7 +13,8 @@
         "tilemaps": "github:microsoft/pxt-tilemaps#v1.10.0",
         "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.0.9",
         "Color Fading": "github:jwunderl/pxt-color#v0.2.0",
-        "arcade-text": "github:pelikhan/arcade-image-text#v0.0.4"
+        "arcade-text": "github:pelikhan/arcade-image-text#v0.0.4",
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0"
     },
     "files": [
         "main.blocks",

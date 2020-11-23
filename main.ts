@@ -619,7 +619,7 @@ tiles.setTilemap(tiles.createTilemap(hex`0a0008000000000000000000000000000000000
 fade_out()
 while (in_menu) {
     blockMenu.setColors(9, 8)
-    blockMenu.showMenu(["Play", "Set fish count", "Set shark count"], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu(["Play", "Instructions", "Set fish count", "Set shark count", "Default options"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_select_and_close()
     if (blockMenu.selectedMenuIndex() == 0) {
         game.showLongText("Selected options:\\n" + user_fish_count + " fish\\n" + user_shark_count + " sharks\\n", DialogLayout.Bottom)
@@ -627,6 +627,12 @@ while (in_menu) {
             in_menu = false
         }
     } else if (blockMenu.selectedMenuIndex() == 1) {
+        game.showLongText("Hello there! Welcome to Fishy Fishy Cross My Ocean!", DialogLayout.Bottom)
+        game.showLongText("In this game, all you have to do is guide your fish " + "(Using the arrow keys or W, A, S, and D - If you figured " + "out how to run this on hardware whilst also being playable " + "please tell me) to the other end! Simple, right?" + "", DialogLayout.Bottom)
+        game.showLongText("Unfortunately for you, no.\\n" + "There will be some sharks patrolling the waters. And they " + "are hungry! (As you can see in figure A. - the picture above)" + "" + "", DialogLayout.Bottom)
+        game.showLongText("Just try to swim around them. You might have to sacrifice a couple " + "AI fish to get around them, because in this game, the sharks are " + "pretty dumb. They go for the nearest fish. That's what their " + "two brain cells do in this game. (And eat them) Just don't do " + "this in real life, and you'll be fine.", DialogLayout.Bottom)
+        game.showLongText("Good luck, and hope you don't become a shark's breakfast!", DialogLayout.Bottom)
+    } else if (blockMenu.selectedMenuIndex() == 2) {
         user_fish_count = game.askForNumber("Please input the amount of fish you want:", 2)
         if (user_fish_count > 31) {
             game.showLongText("31 is the maximum amount of fish! (Fish count is now 31)", DialogLayout.Bottom)
@@ -637,7 +643,7 @@ while (in_menu) {
         } else {
             game.showLongText("Fish count is now " + user_fish_count + "!", DialogLayout.Bottom)
         }
-    } else {
+    } else if (blockMenu.selectedMenuIndex() == 3) {
         user_shark_count = game.askForNumber("Please input the amount of sharks you want:", 2)
         if (user_shark_count < 1) {
             game.showLongText("1 is the minimum amount of sharks! (Shark count is now 1)", DialogLayout.Bottom)
@@ -645,6 +651,10 @@ while (in_menu) {
         } else {
             game.showLongText("Shark count is now " + user_shark_count + "!", DialogLayout.Bottom)
         }
+    } else if (blockMenu.selectedMenuIndex() == 4) {
+        game.showLongText("Default options set!", DialogLayout.Bottom)
+        user_fish_count = 31
+        user_shark_count = 2
     }
 }
 fade_in()
