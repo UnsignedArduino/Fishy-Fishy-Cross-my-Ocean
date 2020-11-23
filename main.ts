@@ -126,6 +126,13 @@ function fade_out () {
     color.startFade(color.Black, color.originalPalette, 2000)
     color.pauseUntilFadeDone()
 }
+function wait_for_select_and_close () {
+    selected_option = false
+    while (!(selected_option)) {
+        pause(100)
+    }
+    blockMenu.closeMenu()
+}
 info.onCountdownEnd(function () {
     if (!(in_game)) {
         for (let index = 0; index <= 9; index++) {
@@ -369,6 +376,9 @@ function create_minimap () {
     sprite_map.z = 50
     sprite_map.setFlag(SpriteFlag.RelativeToCamera, true)
 }
+blockMenu.onMenuOptionSelected(function (option, index) {
+    selected_option = true
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (true) {
         sprite.destroy(effects.spray, 100)
@@ -448,6 +458,7 @@ let sprite_map: Sprite = null
 let sprite_shark: Sprite = null
 let map: minimap.Minimap = null
 let sprite_player_fish: Sprite = null
+let selected_option = false
 let location: tiles.Location = null
 let sprite_fish: Sprite = null
 let local_choice = 0
@@ -467,6 +478,7 @@ user_shark_count = 2
 in_game = false
 player_made_it = false
 last_15 = false
+let in_menu = true
 paths = []
 loading = -1
 message = ""
@@ -603,8 +615,33 @@ tiles.setTilemap(tiles.createTilemap(hex`0a0008000000000000000000000000000000000
     . . . . . . . . . . 
     . . . . . . . . . . 
     `, [myTiles.transparency16,sprites.builtin.oceanSand6,sprites.builtin.coral0,sprites.builtin.coral2,sprites.builtin.coral1,myTiles.tile2,myTiles.tile3,myTiles.tile4,myTiles.tile8,myTiles.tile9,myTiles.tile11], TileScale.Sixteen))
-while (!(controller.anyButton.isPressed())) {
-    pause(100)
+fade_out()
+while (in_menu) {
+    blockMenu.setColors(9, 8)
+    blockMenu.showMenu(["Play", "Set fish count", "Set shark count"], MenuStyle.List, MenuLocation.BottomHalf)
+    wait_for_select_and_close()
+    if (blockMenu.selectedMenuIndex() == 0) {
+        in_menu = false
+    } else if (blockMenu.selectedMenuIndex() == 1) {
+        user_fish_count = game.askForNumber("Please input the amount of fish you want:", 2)
+        if (user_fish_count > 31) {
+            game.showLongText("31 is the maximum amount of fish! (Fish count is now 31)", DialogLayout.Bottom)
+            user_fish_count = 31
+        } else if (user_fish_count < 1) {
+            game.showLongText("1 is the minimum amount of fish! (Fish count is now 1)", DialogLayout.Bottom)
+            user_fish_count = 1
+        } else {
+            game.showLongText("Fish count is now " + user_fish_count + "!", DialogLayout.Bottom)
+        }
+    } else {
+        user_shark_count = game.askForNumber("Please input the amount of sharks you want:", 2)
+        if (user_shark_count < 1) {
+            game.showLongText("1 is the minimum amount of sharks! (Shark count is now 1)", DialogLayout.Bottom)
+            user_shark_count = 1
+        } else {
+            game.showLongText("Shark count is now " + user_shark_count + "!", DialogLayout.Bottom)
+        }
+    }
 }
 fade_in()
 scene.setBackgroundImage(img`
