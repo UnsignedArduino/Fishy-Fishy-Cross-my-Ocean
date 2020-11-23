@@ -94,15 +94,17 @@ function summon_fish (ai: boolean, force_animate: boolean) {
     if (force_animate) {
         character.setCharacterState(sprite_fish, character.rule(Predicate.MovingRight))
     }
-    if (ai) {
-        location = tiles.getTilesByType(myTiles.tile16)[randint(0, tiles.getTilesByType(myTiles.tile16).length - 1)]
-        tiles.setTileAt(location, myTiles.tile12)
-        paths.push(scene.aStar(tiles.locationOfSprite(sprite_fish), location))
-        sprites.setDataNumber(sprite_fish, "path_index", paths.length - 1)
-        sprites.setDataNumber(sprite_fish, "target_row", tiles.locationXY(location, tiles.XY.row))
-        sprites.setDataNumber(sprite_fish, "target_col", tiles.locationXY(location, tiles.XY.column))
-        sprites.setDataBoolean(sprite_fish, "running_away", false)
-    }
+    timer.background(function () {
+        if (ai) {
+            location = tiles.getTilesByType(myTiles.tile16)[randint(0, tiles.getTilesByType(myTiles.tile16).length - 1)]
+            tiles.setTileAt(location, myTiles.tile12)
+            paths.push(scene.aStar(tiles.locationOfSprite(sprite_fish), location))
+            sprites.setDataNumber(sprite_fish, "path_index", paths.length - 1)
+            sprites.setDataNumber(sprite_fish, "target_row", tiles.locationXY(location, tiles.XY.row))
+            sprites.setDataNumber(sprite_fish, "target_col", tiles.locationXY(location, tiles.XY.column))
+            sprites.setDataBoolean(sprite_fish, "running_away", false)
+        }
+    })
     return sprite_fish
 }
 spriteutils.createRenderable(200, function (screen2) {
@@ -240,15 +242,15 @@ function initilize_map () {
         summon_shark()
         loading += 1 / user_shark_count
         message = "(" + (index + 1) + "/" + user_shark_count + ")"
-        pause(100)
+        pause(20)
     }
-    pause(500)
+    pause(100)
     loading = 0
     for (let index = 0; index <= user_fish_count - 2; index++) {
         summon_fish(true, true)
         loading += 1 / (user_fish_count - 1)
         message = "(" + (index + 1) + "/" + (user_fish_count - 1) + ")"
-        pause(100)
+        pause(20)
     }
     loading = 1
     pause(100)
