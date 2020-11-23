@@ -251,6 +251,7 @@ function initilize_map () {
         message = "(" + (index + 1) + "/" + user_shark_count + ")"
         pause(20)
     }
+    loading = 1
     pause(100)
     loading = 0
     for (let index = 0; index <= user_fish_count - 2; index++) {
@@ -621,7 +622,10 @@ while (in_menu) {
     blockMenu.showMenu(["Play", "Set fish count", "Set shark count"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_select_and_close()
     if (blockMenu.selectedMenuIndex() == 0) {
-        in_menu = false
+        game.showLongText("Selected options:\\n" + user_fish_count + " fish\\n" + user_shark_count + " sharks\\n", DialogLayout.Bottom)
+        if (game.ask("Continue with these", "options?")) {
+            in_menu = false
+        }
     } else if (blockMenu.selectedMenuIndex() == 1) {
         user_fish_count = game.askForNumber("Please input the amount of fish you want:", 2)
         if (user_fish_count > 31) {
