@@ -167,8 +167,8 @@ scene.onOverlapTile(SpriteKind.Player, myTiles.tile12, function (sprite, locatio
             info.startCountdown(15)
         })
         timer.background(function () {
-            for (let index = 0; index < 50; index++) {
-                info.changeScoreBy(2)
+            for (let index = 0; index < 100; index++) {
+                info.changeScoreBy(1000)
                 pause(10)
             }
         })
@@ -299,7 +299,7 @@ function initilize_map () {
     for (let location of tiles.getTilesByType(myTiles.tile13)) {
         tiles.setTileAt(location, myTiles.tile15)
     }
-    info.setScore(600)
+    info.setScore(60000)
 }
 function update_minimap () {
     map = minimap.minimap(MinimapScale.Eighth, 2, 11)
@@ -473,6 +473,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 })
 let sprite_closest_sprite: Sprite = null
 let shortest_distance = 0
+let last_score_time = 0
 let sprite_map: Sprite = null
 let sprite_shark: Sprite = null
 let map: minimap.Minimap = null
@@ -560,7 +561,7 @@ scene.setBackgroundImage(img`
     ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...888..........cbbddcfccccbcbcbbb1c333c........fd44cc4144f...................
     ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8.............ccbddcccccbbbbbbb1c333c........fc444444df....................
     ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888...888............ccbbccccccbbbbb11c333c.......cbdc4444ff.....................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.......8............fccbfccccccbbbb11c133cc......cdddffff.......................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.....8.8............fccbfccccccbbbb11c133cc......cdddffff.......................
     ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8.888............fccfcbbcccccbbbc11c31cc.......ccc...........................
     ......6888..6888..6888........688866666...6888666888..6888888666888..6888..........................fcbbf.cdddddfbbbc111111c.....................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888..........................fbbf...cdddfbbdbf1111cc......................................
@@ -651,7 +652,7 @@ while (in_menu) {
     blockMenu.showMenu(["Play", "Instructions", "Set fish count", "Set shark count", "Default options"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_select_and_close()
     if (blockMenu.selectedMenuIndex() == 0) {
-        game.showLongText("Selected options:\\n" + user_fish_count + " fish\\n" + user_shark_count + " sharks\\n", DialogLayout.Bottom)
+        game.showLongText("Selected options:\\n" + user_fish_count + " fish\\n" + user_shark_count + " shark(s)\\n", DialogLayout.Bottom)
         if (game.ask("Continue with these", "options?")) {
             in_menu = false
         }
@@ -673,7 +674,7 @@ while (in_menu) {
             game.showLongText("Fish count is now " + user_fish_count + "!", DialogLayout.Bottom)
         }
     } else if (blockMenu.selectedMenuIndex() == 3) {
-        user_shark_count = game.askForNumber("Please input the amount of sharks you want:", 2)
+        user_shark_count = game.askForNumber("Please input the amount of sharks you want:", 1)
         if (user_shark_count < 1) {
             game.showLongText("1 is the minimum amount of sharks! (Shark count is now 1)", DialogLayout.Bottom)
             user_shark_count = 1
@@ -834,6 +835,15 @@ forever(function () {
 })
 forever(function () {
     if (in_game) {
+        last_score_time = game.runtime()
+        pause(100)
+        info.changeScoreBy(last_score_time - game.runtime())
+    } else {
+        pause(100)
+    }
+})
+forever(function () {
+    if (in_game) {
         for (let sprite_shark of sprites.allOfKind(SpriteKind.Enemy)) {
             shortest_distance = 9999999999
             for (let sprite of sprites.allOfKind(SpriteKind.NPC)) {
@@ -874,10 +884,5 @@ forever(function () {
             }
             pause(50)
         }
-    }
-})
-game.onUpdateInterval(100, function () {
-    if (in_game) {
-        info.changeScoreBy(-1)
     }
 })
