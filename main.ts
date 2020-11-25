@@ -39,6 +39,40 @@ function summon_fish (ai: boolean, force_animate: boolean) {
         . . . . f f 4 4 4 4 c d b c . . 
         . . . . . . f f f f d d d c . . 
         . . . . . . . . . . c c c . . . 
+        `], [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . b b b b . . . . 
+        . . . . . . b b d d d d b . . . 
+        . . . . b b b b b b b d b . b b 
+        . . b b 1 1 d 1 1 1 1 d d b 1 b 
+        . b 1 1 1 1 d 1 1 1 1 1 d b 1 b 
+        b 1 1 1 1 1 d 1 1 1 1 1 d 1 1 b 
+        b 1 1 1 f 1 d b b 1 1 1 d b 1 c 
+        b 1 1 1 1 1 d 1 1 b 1 1 d c 1 c 
+        . b 1 1 1 1 d b 1 b 1 d c c c c 
+        . . c c 1 d 1 1 b b 1 c c c . . 
+        . . . . c c 1 1 1 1 c d c . . . 
+        . . . . . . c c c c c c . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `], [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . b b b . . . . . 
+        . . . . . . b b d d d b . . . . 
+        . . . . b b b b b b b d b . b b 
+        . . b b d 2 2 2 2 2 b d d b 5 b 
+        . b 7 7 d 2 4 4 2 2 2 2 d 5 5 b 
+        b 7 f 7 d 2 2 2 4 2 2 2 d b 5 c 
+        b 7 7 7 d 2 4 2 4 2 2 2 d c 5 c 
+        . b 7 d 2 2 2 4 4 2 2 d c c c c 
+        . . c c 1 1 1 1 1 1 1 1 c . . . 
+        . . . . c c c c c c c c . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
         `]]
     right_fish_animations = [[img`
         . . . . . . . . . . . . . . . . 
@@ -74,8 +108,42 @@ function summon_fish (ai: boolean, force_animate: boolean) {
         . . c b d c 4 4 4 4 f f . . . . 
         . . c d d d f f f f . . . . . . 
         . . . c c c . . . . . . . . . . 
+        `], [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . b b b b . . . . . . . . 
+        . . . b d d d d b b . . . . . . 
+        b b . b d b b b b b b b . . . . 
+        b 1 b d d 1 1 1 1 d 1 1 b b . . 
+        b 1 b d 1 1 1 1 1 d 1 1 1 1 b . 
+        b 1 1 d 1 1 1 1 1 d 1 1 1 1 1 b 
+        c 1 b d 1 1 1 b b d 1 f 1 1 1 b 
+        c 1 c d 1 1 b 1 1 d 1 1 1 1 1 b 
+        c c c c d 1 b 1 b d 1 1 1 1 b . 
+        . . c c c 1 b b 1 1 d 1 c c . . 
+        . . . c d c 1 1 1 1 c c . . . . 
+        . . . . c c c c c c . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `], [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . b b b . . . . . . . . 
+        . . . . b d d d b b . . . . . . 
+        b b . b d b b b b b b b . . . . 
+        b 5 b d d b 2 2 2 2 2 d b b . . 
+        b 5 5 d 2 2 2 2 4 4 2 d 7 7 b . 
+        c 5 b d 2 2 2 4 2 2 2 d 7 f 7 b 
+        c 5 c d 2 2 2 4 2 4 2 d 7 7 7 b 
+        c c c c d 2 2 4 4 2 2 2 d 7 b . 
+        . . . c 1 1 1 1 1 1 1 1 c c . . 
+        . . . . c c c c c c c c . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
         `]]
-    local_choice = randint(0, 1)
+    local_choice = randint(0, left_fish_animations.length - 1)
     sprite_fish = sprites.create(right_fish_animations[local_choice][0], SpriteKind.NPC)
     tiles.placeOnRandomTile(sprite_fish, myTiles.tile13)
     tiles.setTileAt(tiles.locationOfSprite(sprite_fish), myTiles.tile15)
@@ -166,12 +234,7 @@ scene.onOverlapTile(SpriteKind.Player, myTiles.tile12, function (sprite, locatio
         timer.after(100, function () {
             info.startCountdown(15)
         })
-        timer.background(function () {
-            for (let index = 0; index < 100; index++) {
-                info.changeScoreBy(1000)
-                pause(10)
-            }
-        })
+        info.changeScoreBy(10000)
     }
 })
 sprites.onOverlap(SpriteKind.NPC, SpriteKind.Enemy, function (sprite, otherSprite) {
@@ -467,7 +530,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
         character.setCharacterAnimationsEnabled(otherSprite, true)
     })
     scene.cameraFollowSprite(otherSprite)
-    timer.after(5000, function () {
+    timer.after(4500, function () {
+        in_game = false
+        pause(500)
         game.over(false)
     })
 })
@@ -559,10 +624,10 @@ scene.setBackgroundImage(img`
     ..........................................................................................................fcccbcbcbb1c1c1cff...fff144f4c144444f.................
     ......666666666...666666666...666666666...666666666...6666.....666...666..........................ccccc..fcccbcbcbbb1333ccf......fd44f4414444f..................
     ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...888..........cbbddcfccccbcbcbbb1c333c........fd44cc4144f...................
-    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8.............ccbddcccccbbbbbbb1c333c........fc444444df....................
-    ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888...888............ccbbccccccbbbbb11c333c.......cbdc4444ff.....................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.....8.8............fccbfccccccbbbb11c133cc......cdddffff.......................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8.888............fccfcbbcccccbbbc11c31cc.......ccc...........................
+    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8.....8...........ccbddcccccbbbbbbb1c333c........fc444444df....................
+    ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888.....8............ccbbccccccbbbbb11c333c.......cbdc4444ff.....................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.......8............fccbfccccccbbbb11c133cc......cdddffff.......................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8...8............fccfcbbcccccbbbc11c31cc.......ccc...........................
     ......6888..6888..6888........688866666...6888666888..6888888666888..6888..........................fcbbf.cdddddfbbbc111111c.....................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888..........................fbbf...cdddfbbdbf1111cc......................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888.........................fbbf.....ccfbbdbfffccc........................................
@@ -670,6 +735,9 @@ while (in_menu) {
         } else if (user_fish_count < 1) {
             game.showLongText("1 is the minimum amount of fish! (Fish count is now 1)", DialogLayout.Bottom)
             user_fish_count = 1
+        } else if (user_fish_count != user_fish_count) {
+            game.showLongText("That's not a number! (Fish count is now 31)", DialogLayout.Bottom)
+            user_fish_count = 31
         } else {
             game.showLongText("Fish count is now " + user_fish_count + "!", DialogLayout.Bottom)
         }
@@ -678,6 +746,9 @@ while (in_menu) {
         if (user_shark_count < 1) {
             game.showLongText("1 is the minimum amount of sharks! (Shark count is now 1)", DialogLayout.Bottom)
             user_shark_count = 1
+        } else if (user_shark_count != user_shark_count) {
+            game.showLongText("That's not a number! (Shark count is now 2)", DialogLayout.Bottom)
+            user_shark_count = 2
         } else {
             game.showLongText("Shark count is now " + user_shark_count + "!", DialogLayout.Bottom)
         }
@@ -844,6 +915,26 @@ forever(function () {
 })
 forever(function () {
     if (in_game) {
+        for (let sprite_fish of sprites.allOfKind(SpriteKind.NPC)) {
+            for (let sprite_shark of sprites.allOfKind(SpriteKind.Enemy)) {
+                if (spriteutils.distanceBetween(sprite_fish, sprite_shark) < 48 && !(sprites.readDataBoolean(sprite_fish, "running_away"))) {
+                    scene.followPath(sprite_fish, paths[sprites.readDataNumber(sprite_fish, "path_index")], 0)
+                    spriteutils.setVelocityAtAngle(sprite_fish, spriteutils.angleFrom(sprite_shark, sprite_fish), 70)
+                    sprites.setDataBoolean(sprite_fish, "running_away", true)
+                    if (true) {
+                        timer.after(500, function () {
+                            scene.followPath(sprite_fish, scene.aStar(tiles.locationOfSprite(sprite_fish), tiles.getTileLocation(sprites.readDataNumber(sprite_fish, "target_col"), sprites.readDataNumber(sprite_fish, "target_row"))), randint(40, 80))
+                            sprites.setDataBoolean(sprite_fish, "running_away", false)
+                        })
+                    }
+                }
+            }
+            pause(50)
+        }
+    }
+})
+forever(function () {
+    if (in_game) {
         for (let sprite_shark of sprites.allOfKind(SpriteKind.Enemy)) {
             shortest_distance = 9999999999
             for (let sprite of sprites.allOfKind(SpriteKind.NPC)) {
@@ -863,26 +954,6 @@ forever(function () {
             } else {
                 sprite_shark.follow(sprite_closest_sprite, 0)
             }
-        }
-    }
-})
-forever(function () {
-    if (in_game) {
-        for (let sprite_fish of sprites.allOfKind(SpriteKind.NPC)) {
-            for (let sprite_shark of sprites.allOfKind(SpriteKind.Enemy)) {
-                if (spriteutils.distanceBetween(sprite_fish, sprite_shark) < 48 && !(sprites.readDataBoolean(sprite_fish, "running_away"))) {
-                    scene.followPath(sprite_fish, paths[sprites.readDataNumber(sprite_fish, "path_index")], 0)
-                    spriteutils.setVelocityAtAngle(sprite_fish, spriteutils.angleFrom(sprite_shark, sprite_fish), 70)
-                    sprites.setDataBoolean(sprite_fish, "running_away", true)
-                    if (true) {
-                        timer.after(500, function () {
-                            scene.followPath(sprite_fish, scene.aStar(tiles.locationOfSprite(sprite_fish), tiles.getTileLocation(sprites.readDataNumber(sprite_fish, "target_col"), sprites.readDataNumber(sprite_fish, "target_row"))), randint(40, 80))
-                            sprites.setDataBoolean(sprite_fish, "running_away", false)
-                        })
-                    }
-                }
-            }
-            pause(50)
         }
     }
 })
