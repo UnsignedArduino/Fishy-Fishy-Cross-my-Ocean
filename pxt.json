@@ -1,6 +1,6 @@
 {
     "name": "Fishy Fishy Cross my Ocean! v1.2.2 attempt 3",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "",
     "dependencies": {
         "device": "*",
