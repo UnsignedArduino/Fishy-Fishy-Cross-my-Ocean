@@ -4,6 +4,23 @@ namespace SpriteKind {
     export const SurvivedPlayer = SpriteKind.create()
     export const SurvivedNPC = SpriteKind.create()
 }
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (in_game) {
+        timer.debounce("change_dark_mode", 500, function () {
+            dark_mode = !(dark_mode)
+            if (dark_mode) {
+                blockSettings.writeNumber("dark_mode", 1)
+            } else {
+                blockSettings.writeNumber("dark_mode", 0)
+            }
+            color.startFade(color.originalPalette, color.Black, 250)
+            color.pauseUntilFadeDone()
+            multilights.toggleLighting(dark_mode)
+            color.startFade(color.Black, color.originalPalette, 250)
+            color.pauseUntilFadeDone()
+        })
+    }
+})
 function summon_fish (ai: boolean, force_animate: boolean) {
     left_fish_animations = [[img`
         . . . . . . . . . . . . . . . . 
@@ -173,6 +190,7 @@ function summon_fish (ai: boolean, force_animate: boolean) {
             sprites.setDataBoolean(sprite_fish, "running_away", false)
         }
     })
+    multilights.addLightSource(sprite_fish, 4)
     return sprite_fish
 }
 spriteutils.createRenderable(200, function (screen2) {
@@ -460,18 +478,21 @@ function summon_shark () {
     250,
     character.rule(Predicate.MovingRight)
     )
+    multilights.addLightSource(sprite_shark, 10)
     return sprite_shark
 }
 function create_minimap () {
     sprite_map = sprites.create(update_minimap(), SpriteKind.Map)
     sprite_map.bottom = scene.screenHeight() - 2
     sprite_map.x = scene.screenWidth() / 2
-    sprite_map.z = 50
+    sprite_map.z = 500
     sprite_map.setFlag(SpriteFlag.RelativeToCamera, true)
 }
 blockMenu.onMenuOptionSelected(function (option, index) {
     selected_option = true
-    music.playTone(294, music.beat(BeatFraction.Quarter))
+    if (in_menu) {
+        music.playTone(294, music.beat(BeatFraction.Quarter))
+    }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (true) {
@@ -565,9 +586,11 @@ let message = ""
 let loading = 0
 let show_minimap = false
 let paths: tiles.Location[][] = []
+let in_menu = false
 let last_15 = false
 let player_made_it = false
 let in_game = false
+let dark_mode = false
 let user_shark_count = 0
 let user_fish_count = 0
 if (blockSettings.exists("fish_count")) {
@@ -584,10 +607,17 @@ if (blockSettings.exists("shark_count")) {
     // max is 31
     user_shark_count = 2
 }
+if (blockSettings.exists("dark_mode")) {
+    // max is 31
+    dark_mode = blockSettings.readNumber("dark_mode") == 1
+} else {
+    // max is 31
+    dark_mode = false
+}
 in_game = false
 player_made_it = false
 last_15 = false
-let in_menu = true
+in_menu = true
 paths = []
 show_minimap = true
 loading = -1
@@ -904,6 +934,7 @@ initilize_map()
 message = "Took " + (game.runtime() - loading_start_time) / 1000 + " seconds"
 fade_in()
 loading = -1
+multilights.toggleLighting(dark_mode)
 create_minimap()
 start_game()
 fade_out()
