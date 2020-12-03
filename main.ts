@@ -4,12 +4,6 @@ namespace SpriteKind {
     export const SurvivedPlayer = SpriteKind.create()
     export const SurvivedNPC = SpriteKind.create()
 }
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (in_game) {
-        show_minimap = !(show_minimap)
-        sprite_map.setFlag(SpriteFlag.Invisible, show_minimap)
-    }
-})
 function summon_fish (ai: boolean, force_animate: boolean) {
     left_fish_animations = [[img`
         . . . . . . . . . . . . . . . . 
@@ -197,6 +191,12 @@ scene.onOverlapTile(SpriteKind.NPC, myTiles.tile12, function (sprite, location) 
         timer.after(100, function () {
             info.startCountdown(15)
         })
+    }
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (in_game) {
+        show_minimap = !(show_minimap)
+        sprite_map.setFlag(SpriteFlag.Invisible, show_minimap)
     }
 })
 function fade_out () {
@@ -555,15 +555,15 @@ let sprite_shark: Sprite = null
 let map: minimap.Minimap = null
 let sprite_player_fish: Sprite = null
 let selected_option = false
+let sprite_map: Sprite = null
 let location: tiles.Location = null
 let sprite_fish: Sprite = null
 let local_choice = 0
 let right_fish_animations: Image[][] = []
 let left_fish_animations: Image[][] = []
-let sprite_map: Sprite = null
-let show_minimap = false
 let message = ""
 let loading = 0
+let show_minimap = false
 let paths: tiles.Location[][] = []
 let last_15 = false
 let player_made_it = false
@@ -589,6 +589,7 @@ player_made_it = false
 last_15 = false
 let in_menu = true
 paths = []
+show_minimap = true
 loading = -1
 message = ""
 scene.setBackgroundColor(9)
