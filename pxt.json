@@ -14,7 +14,8 @@
         "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.0.9",
         "Color Fading": "github:jwunderl/pxt-color#v0.2.0",
         "arcade-text": "github:pelikhan/arcade-image-text#v0.0.4",
-        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0"
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
+        "pxt-lantern": "github:felixtsu/pxt-lantern#v0.1.7"
     },
     "files": [
         "main.blocks",
