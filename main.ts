@@ -306,13 +306,19 @@ sprites.onOverlap(SpriteKind.NPC, SpriteKind.Enemy, function (sprite, otherSprit
             ..........fff........fffff..........
             `)
     }
-    pause(5)
     timer.after(100, function () {
         character.setCharacterAnimationsEnabled(otherSprite, true)
     })
 })
 function start_game () {
     info.startCountdown(5)
+    timer.background(function () {
+        for (let index = 0; index < 4; index++) {
+            music.playTone(392, music.beat(BeatFraction.Quarter))
+            pause(1000)
+        }
+        music.playTone(587, music.beat(BeatFraction.Half))
+    })
 }
 function initilize_map () {
     scene.setBackgroundColor(9)
@@ -465,6 +471,7 @@ function create_minimap () {
 }
 blockMenu.onMenuOptionSelected(function (option, index) {
     selected_option = true
+    music.playTone(294, music.beat(BeatFraction.Quarter))
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (true) {
@@ -531,7 +538,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
             ..........fff........fffff......
             `)
     }
-    pause(5)
     timer.after(100, function () {
         character.setCharacterAnimationsEnabled(otherSprite, true)
     })
@@ -633,7 +639,7 @@ scene.setBackgroundImage(img`
     ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...888..............fccfcbbcccccbbbc11c31cc.......ccc.........................
     ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8.8.............fcbbf.cdddddfbbbc111111c...................................
     ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888...888.............fbbf...cdddfbbdbf1111cc....................................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.....8.8............fbbf.....ccfbbdbfffccc......................................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8...8.......8............fbbf.....ccfbbdbfffccc......................................
     ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8.888............fff........fffff............................................
     ......6888..6888..6888........688866666...6888666888..6888888666888..6888.......................................................................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888.......................................................................................
@@ -901,15 +907,15 @@ create_minimap()
 start_game()
 fade_out()
 forever(function () {
+    sprite_map.setImage(update_minimap())
+})
+forever(function () {
     if (sprites.allOfKind(SpriteKind.NPC).length == 0 && player_made_it) {
         info.stopCountdown()
         pause(1000)
         info.startCountdown(0)
     }
     pause(100)
-})
-forever(function () {
-    sprite_map.setImage(update_minimap())
 })
 forever(function () {
     if (in_game) {
