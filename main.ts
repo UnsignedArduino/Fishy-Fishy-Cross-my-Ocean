@@ -574,7 +574,6 @@ let shortest_distance = 0
 let last_score_time = 0
 let sprite_shark: Sprite = null
 let map: minimap.Minimap = null
-let sprite_player_fish: Sprite = null
 let selected_option = false
 let sprite_map: Sprite = null
 let location: tiles.Location = null
@@ -582,6 +581,8 @@ let sprite_fish: Sprite = null
 let local_choice = 0
 let right_fish_animations: Image[][] = []
 let left_fish_animations: Image[][] = []
+let shortest_shark_distance = 0
+let sprite_player_fish: Sprite = null
 let message = ""
 let loading = 0
 let show_minimap = false
@@ -620,6 +621,7 @@ last_15 = false
 in_menu = true
 paths = []
 show_minimap = true
+let play_music = true
 loading = -1
 message = ""
 scene.setBackgroundColor(9)
@@ -667,11 +669,11 @@ scene.setBackgroundImage(img`
     .....................................................................................................ccbddcccccbbbbbbb1c333c........fc444444df..................
     ......................................................................................................ccbbccccccbbbbb11c333c.......cbdc4444ff...................
     ......666666666...666666666...666666666...666666666...6666.....666...666..............................fccbfccccccbbbb11c133cc......cdddffff.....................
-    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...888..............fccfcbbcccccbbbc11c31cc.......ccc.........................
-    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8.8.............fcbbf.cdddddfbbbc111111c...................................
-    ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888...8.8.............fbbf...cdddfbbdbf1111cc....................................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.....8...8.8............fbbf.....ccfbbdbfffccc......................................
-    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8.888............fff........fffff............................................
+    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8...888...8................fccfcbbcccccbbbc11c31cc.......ccc.........................
+    ......6888888888..6888888888..6888888888..6888888888..6888.....6888..6888..8.....8...8...............fcbbf.cdddddfbbbc111111c...................................
+    ......6888888888..6888888888..6888888888..6888888888..688866...6888..6888..8...888...8...............fbbf...cdddfbbdbf1111cc....................................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.....8...8..............fbbf.....ccfbbdbfffccc......................................
+    ......6888..6888..6888........6888........6888..6888..6888888..6888..6888..8.8.888.8.8..............fff........fffff............................................
     ......6888..6888..6888........688866666...6888666888..6888888666888..6888.......................................................................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888.......................................................................................
     ......6888..6888..6888........6888888888..6888888888..6888..6888888..6888.......................................................................................
@@ -771,6 +773,7 @@ while (in_menu) {
         game.showLongText("Unfortunately for you, no.\\n" + "There will be some sharks patrolling the waters. And they " + "are hungry! (As you can see in figure A. - the picture above)" + "" + "", DialogLayout.Bottom)
         game.showLongText("Just try to swim around them. You might have to sacrifice a couple " + "AI fish to get around them, because in this game, the sharks are " + "pretty dumb. They go for the nearest fish. That's what their " + "two brain cells do in this game. (And eat them) Just don't do " + "this in real life, and you'll be fine.", DialogLayout.Bottom)
         game.showLongText("Good luck, and hope you don't become a shark's breakfast!", DialogLayout.Bottom)
+        game.showLongText("Note: Please do not play this game if you have galeophobia and/or thalassophobia.", DialogLayout.Bottom)
     } else if (blockMenu.selectedMenuIndex() == 2) {
         user_fish_count = game.askForNumber("Please input the amount of fish you want:", 2)
         if (user_fish_count > 31) {
@@ -938,6 +941,25 @@ multilights.toggleLighting(dark_mode)
 create_minimap()
 start_game()
 fade_out()
+timer.after(5000, function () {
+    while (play_music) {
+        if (spriteutils.isDestroyed(sprite_player_fish)) {
+            music.playTone(117, music.beat(BeatFraction.Half))
+            music.playTone(110, music.beat(BeatFraction.Double))
+            play_music = false
+        } else {
+            music.playTone(110, music.beat(BeatFraction.Whole))
+            music.playTone(117, music.beat(BeatFraction.Quarter))
+            shortest_shark_distance = 10000000000000000
+            for (let sprite of sprites.allOfKind(SpriteKind.Enemy)) {
+                if (spriteutils.distanceBetween(sprite_player_fish, sprite) < shortest_shark_distance) {
+                    shortest_shark_distance = spriteutils.distanceBetween(sprite_player_fish, sprite)
+                }
+            }
+            pause(shortest_shark_distance * 10)
+        }
+    }
+})
 forever(function () {
     sprite_map.setImage(update_minimap())
 })
